@@ -61,19 +61,21 @@ export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
           >
             ✕
           </button>
-          <Image
-            src={selected.image.url}
-            alt={selected.title}
-            width={selected.image.width}
-            height={selected.image.height}
-            sizes="100vw"
-            style={{ maxHeight: "80vh", width: "auto", objectFit: "contain" }}
-          />
-          <div className="lightbox-overlay__caption">
-            <p className="lightbox-overlay__title">{selected.title}</p>
-            {selected.description && (
-              <p className="lightbox-overlay__description">{selected.description}</p>
-            )}
+          <div className="lightbox-overlay__content">
+            <Image
+              src={selected.image.url}
+              alt={selected.title}
+              width={selected.image.width}
+              height={selected.image.height}
+              sizes="100vw"
+              style={{ maxHeight: "65vh", width: "auto", objectFit: "contain" }}
+            />
+            <div className="lightbox-overlay__caption">
+              <p className="lightbox-overlay__title">{selected.title}</p>
+              {selected.description && (
+                <p className="lightbox-overlay__description">{selected.description}</p>
+              )}
+            </div>
           </div>
         </div>
       )}

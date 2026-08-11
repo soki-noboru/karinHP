@@ -77,12 +77,23 @@ function formatDateKeyForModal(key: string) {
   return `${m}月${d}日(${weekday})`;
 }
 
+// 今月から前後何ヶ月まで移動できるようにするか
+const MONTH_RANGE = 3;
+
 export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[] }) {
   const today = useMemo(() => new Date(), []);
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth()); // 0-11
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
   const [openEntryId, setOpenEntryId] = useState<string | null>(null);
+
+  // 年月を1つの数値（例: 2026年8月 → 2026*12+7）にして比較しやすくします
+  const monthIndex = year * 12 + month;
+  const todayMonthIndex = today.getFullYear() * 12 + today.getMonth();
+  const minMonthIndex = todayMonthIndex - MONTH_RANGE;
+  const maxMonthIndex = todayMonthIndex + MONTH_RANGE;
+  const canGoPrev = monthIndex > minMonthIndex;
+  const canGoNext = monthIndex < maxMonthIndex;
 
   const entryMap = useMemo(() => {
     const map = new Map<string, ScheduleEntry[]>();
@@ -104,6 +115,7 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
   ];
 
   function goPrevMonth() {
+    if (!canGoPrev) return;
     if (month === 0) {
       setYear((y) => y - 1);
       setMonth(11);
@@ -113,6 +125,7 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
   }
 
   function goNextMonth() {
+    if (!canGoNext) return;
     if (month === 11) {
       setYear((y) => y + 1);
       setMonth(0);
@@ -139,13 +152,25 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
     <>
     <div className="calendar">
       <div className="calendar__header">
-        <button type="button" onClick={goPrevMonth} aria-label="前の月" className="calendar__nav">
+        <button
+          type="button"
+          onClick={goPrevMonth}
+          aria-label="前の月"
+          className="calendar__nav"
+          disabled={!canGoPrev}
+        >
           ‹
         </button>
         <span className="calendar__title">
           {year}年{month + 1}月
         </span>
-        <button type="button" onClick={goNextMonth} aria-label="次の月" className="calendar__nav">
+        <button
+          type="button"
+          onClick={goNextMonth}
+          aria-label="次の月"
+          className="calendar__nav"
+          disabled={!canGoNext}
+        >
           ›
         </button>
       </div>

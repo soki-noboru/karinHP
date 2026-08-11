@@ -95,6 +95,9 @@ export default function ContactForm() {
       <p className="form__note">
         入力いただいた内容は、お問い合わせへの返信にのみ利用します。
       </p>
+      <p className="form__note">
+        ご予約はLINE・Instagramのメッセージからでも承っております。
+      </p>
     </form>
   );
 }

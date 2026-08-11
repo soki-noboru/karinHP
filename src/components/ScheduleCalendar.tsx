@@ -38,16 +38,24 @@ function toJstDateKey(rawDate: string) {
   return JST_DATE_FORMATTER.format(parsed);
 }
 
+/**
+ * "鑑定可"ではなく"鑑定可能"のように、microCMS側の選択肢の文言が
+ * 完全一致しないケースがあっても正しく色分けできるよう、
+ * 部分一致で判定します（未設定の場合も考慮）。
+ */
+function classifyType(type: ScheduleEntry["type"] | null | undefined): "ok" | "ng" | "event" {
+  const value = type ?? "";
+  if (value.includes("イベント")) return "event";
+  if (value.includes("鑑定可")) return "ok";
+  return "ng";
+}
+
 function badgeClass(type: ScheduleEntry["type"]) {
-  if (type === "鑑定可") return "calendar__badge--ok";
-  if (type === "イベント") return "calendar__badge--event";
-  return "calendar__badge--ng";
+  return `calendar__badge--${classifyType(type)}`;
 }
 
 function dotClass(type: ScheduleEntry["type"]) {
-  if (type === "鑑定可") return "calendar__dot--ok";
-  if (type === "イベント") return "calendar__dot--event";
-  return "calendar__dot--ng";
+  return `calendar__dot--${classifyType(type)}`;
 }
 
 /** 開始・終了時刻とラベルから、バッジに表示する文言を組み立てます */

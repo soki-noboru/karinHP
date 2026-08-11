@@ -15,30 +15,39 @@ import ScheduleCalendar from "@/components/ScheduleCalendar";
 // このページはリクエスト時にレンダリングします（データ自体はfetchのrevalidate設定でキャッシュされます）。
 export const dynamic = "force-dynamic";
 
+const EMPTY_LIST = { contents: [], totalCount: 0, offset: 0, limit: 0 };
+
 async function fetchProfileOrNull() {
   try {
     return await getProfile();
-  } catch {
+  } catch (error) {
+    console.error("[home] プロフィールの取得に失敗しました:", error);
     return null;
   }
 }
 
-// 「スケジュール」APIをまだ作成していない場合でもページ全体が落ちないようにします。
-async function fetchScheduleListSafe() {
+// microCMS側の設定不備（APIキーの権限不足など）でページ全体が落ちないよう、
+// 各リストの取得はそれぞれ個別にエラーを捕まえ、失敗時は空リスト扱いにします。
+// 失敗時はVercelのFunction Logsにエラー内容が出るようにしています。
+async function fetchListSafe<T>(
+  label: string,
+  fetcher: () => Promise<T>
+): Promise<T | typeof EMPTY_LIST> {
   try {
-    return await getScheduleList();
-  } catch {
-    return { contents: [], totalCount: 0, offset: 0, limit: 0 };
+    return await fetcher();
+  } catch (error) {
+    console.error(`[home] ${label}の取得に失敗しました:`, error);
+    return EMPTY_LIST;
   }
 }
 
 export default async function HomePage() {
   const [profile, newsRes, galleryRes, menuRes, scheduleRes] = await Promise.all([
     fetchProfileOrNull(),
-    getNewsList("limit=20"),
-    getGalleryList("limit=100"),
-    getMenuList(),
-    fetchScheduleListSafe(),
+    fetchListSafe("お知らせ", () => getNewsList("limit=20")),
+    fetchListSafe("ギャラリー", () => getGalleryList("limit=100")),
+    fetchListSafe("鑑定メニュー", () => getMenuList()),
+    fetchListSafe("スケジュール", () => getScheduleList()),
   ]);
 
   return (

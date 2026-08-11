@@ -60,9 +60,9 @@ export default async function HomePage() {
             <Image
               src={profile.photo.url}
               alt={profile.name}
-              width={288}
-              height={288}
-              sizes="144px"
+              width={360}
+              height={360}
+              sizes="180px"
               priority
             />
           </div>

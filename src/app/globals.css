@@ -138,8 +138,8 @@ button {
 }
 
 .hero__photo {
-  width: 144px;
-  height: 144px;
+  width: 180px;
+  height: 180px;
   border-radius: 999px;
   overflow: hidden;
   margin: 0 auto 16px;

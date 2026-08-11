@@ -13,6 +13,7 @@ import ScheduleCalendar from "@/components/ScheduleCalendar";
 
 // ビルド時にmicroCMSへ接続できない状態でもデプロイが失敗しないよう、
 // このページはリクエスト時にレンダリングします（データ自体はfetchのrevalidate設定でキャッシュされます）。
+// (デプロイ動作確認のための更新)
 export const dynamic = "force-dynamic";
 
 const EMPTY_LIST = { contents: [], totalCount: 0, offset: 0, limit: 0 };

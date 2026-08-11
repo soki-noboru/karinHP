@@ -59,13 +59,6 @@ export function getNewsList(queryString = "orders=-publishedAt") {
   });
 }
 
-/** お知らせ・ブログ記事の詳細を1件取得します */
-export function getNewsDetail(id: string) {
-  return microcmsFetch<News>(`/news/${id}`, {
-    tags: ["news", `news-${id}`],
-  });
-}
-
 /** 写真ギャラリーの一覧を取得します（新しく公開したものが先頭に来るように並べます） */
 export function getGalleryList(queryString = "orders=-publishedAt") {
   const suffix = queryString ? `?${queryString}` : "";

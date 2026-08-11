@@ -88,16 +88,29 @@ function formatDateKeyForModal(key: string) {
 // 今月から前後何ヶ月まで移動できるようにするか
 const MONTH_RANGE = 3;
 
+/**
+ * 「今日」を日本時間(Asia/Tokyo)基準で取得します。
+ * サーバー側（Vercelの実行環境はUTC）とブラウザ側（訪問者のローカル時刻）で
+ * タイムゾーンが異なると、日本時間の0:00〜9:00の間だけ「今日」の判定が
+ * 前日にずれてしまう（サーバーでレンダリングした結果とクライアントで食い違う）ため、
+ * 常に日本時間の日付を基準にします。
+ */
+function getJstToday() {
+  const key = JST_DATE_FORMATTER.format(new Date()); // "YYYY-MM-DD"
+  const [y, m, d] = key.split("-").map(Number);
+  return { year: y, month: m - 1, day: d }; // monthは0-11に変換
+}
+
 export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[] }) {
-  const today = useMemo(() => new Date(), []);
-  const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth()); // 0-11
+  const today = useMemo(() => getJstToday(), []);
+  const [year, setYear] = useState(today.year);
+  const [month, setMonth] = useState(today.month); // 0-11
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
   const [openEntryId, setOpenEntryId] = useState<string | null>(null);
 
   // 年月を1つの数値（例: 2026年8月 → 2026*12+7）にして比較しやすくします
   const monthIndex = year * 12 + month;
-  const todayMonthIndex = today.getFullYear() * 12 + today.getMonth();
+  const todayMonthIndex = today.year * 12 + today.month;
   const minMonthIndex = todayMonthIndex - MONTH_RANGE;
   const maxMonthIndex = todayMonthIndex + MONTH_RANGE;
   const canGoPrev = monthIndex > minMonthIndex;
@@ -142,7 +155,7 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
     }
   }
 
-  const isCurrentMonth = year === today.getFullYear() && month === today.getMonth();
+  const isCurrentMonth = year === today.year && month === today.month;
 
   function openDay(key: string) {
     setSelectedDateKey(key);
@@ -198,7 +211,7 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
           }
           const key = dateKey(year, month, day);
           const dayEntries = entryMap.get(key) ?? [];
-          const isToday = isCurrentMonth && day === today.getDate();
+          const isToday = isCurrentMonth && day === today.day;
           const hasEntries = dayEntries.length > 0;
           return (
             <button

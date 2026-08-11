@@ -88,8 +88,8 @@ export function getProfile() {
   });
 }
 
-/** スケジュール（カレンダー表示用）の一覧を取得します */
-export function getScheduleList(queryString = "orders=date&limit=200") {
+/** スケジュール（カレンダー表示用）の一覧を取得します（microCMSのlimit上限は100件） */
+export function getScheduleList(queryString = "orders=date&limit=100") {
   return microcmsFetch<MicroCMSListResponse<ScheduleEntry>>(`/schedule?${queryString}`, {
     tags: ["schedule"],
   });

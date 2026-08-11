@@ -21,8 +21,10 @@ export type MicroCMSImage = {
 export type NewsCategory = "お知らせ" | "ブログ" | "イベント";
 
 export type News = MicroCMSListContent & {
-  title: string;
-  content: string; // リッチエディタのHTML
+  date: string; // お知らせとして表示する日付（YYYY-MM-DD）※必須
+  title: string; // ※必須
+  instagramUrl?: string; // Instagramの投稿URL（本文の代わりにこちらだけでもOK）
+  content?: string; // リッチエディタのHTML（本文を書く場合。instagramUrlと併用も可）
   eyecatch?: MicroCMSImage;
   category?: NewsCategory;
 };

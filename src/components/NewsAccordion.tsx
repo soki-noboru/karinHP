@@ -4,23 +4,45 @@ import { useState } from "react";
 import type { News } from "@/types/microcms";
 import { formatDate } from "@/lib/format";
 
+const INITIAL_VISIBLE_COUNT = 5;
+
+/**
+ * リッチエディタは何も書かなくても "<p><br></p>" のような
+ * 見た目上は空のHTMLを保存することがあるため、タグを取り除いた上で
+ * 実際に表示する内容があるかどうかを判定します（画像だけの場合はOK扱い）。
+ */
+function hasVisibleContent(html?: string) {
+  if (!html) return false;
+  const stripped = html
+    .replace(/<[^>]*>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .trim();
+  if (stripped.length > 0) return true;
+  return /<img[\s>]/i.test(html);
+}
+
 export default function NewsAccordion({ items }: { items: News[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
+
+  const visibleItems = showAll ? items : items.slice(0, INITIAL_VISIBLE_COUNT);
+  const hasMore = !showAll && items.length > INITIAL_VISIBLE_COUNT;
 
   return (
     <div className="news-accordion">
-      {items.map((news) => {
+      {visibleItems.map((news) => {
+        const instagramUrl = news.instagramUrl?.trim();
         // Instagramの投稿URLが設定されていれば、本文があってもリンクへ直接飛ばします。
-        const isLink = Boolean(news.instagramUrl);
-        // リンクではなく、本文がある場合のみ開閉できるようにします。
-        const isExpandable = !isLink && Boolean(news.content);
+        const isLink = Boolean(instagramUrl);
+        // リンクではなく、実際に表示できる本文がある場合のみ開閉できるようにします。
+        const isExpandable = !isLink && hasVisibleContent(news.content);
         const isOpen = isExpandable && openId === news.id;
 
         const headerInner = (
           <>
             <span className="news-accordion__meta">
               {news.category && <span className="badge">{news.category}</span>}
-              <span>{formatDate(news.date)}</span>
+              <span>{formatDate(news.publishedAt)}</span>
             </span>
             <span className="news-accordion__title">{news.title}</span>
             {isLink && <span className="news-accordion__arrow">↗</span>}
@@ -30,12 +52,12 @@ export default function NewsAccordion({ items }: { items: News[] }) {
           </>
         );
 
-        if (isLink) {
+        if (isLink && instagramUrl) {
           return (
             <div key={news.id} className="news-accordion__item">
               <a
                 className="news-accordion__header"
-                href={news.instagramUrl}
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -71,6 +93,16 @@ export default function NewsAccordion({ items }: { items: News[] }) {
           </div>
         );
       })}
+
+      {hasMore && (
+        <button
+          type="button"
+          className="news-accordion__more"
+          onClick={() => setShowAll(true)}
+        >
+          もっと見る
+        </button>
+      )}
     </div>
   );
 }

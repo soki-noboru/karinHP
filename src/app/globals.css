@@ -590,9 +590,17 @@ button {
   margin-bottom: 10px;
 }
 
-.news-accordion__instagram {
-  display: inline-block;
-  margin-top: 10px;
+.news-accordion__more {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-accent-strong);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
 }
 
 /* 鑑定メニュー */

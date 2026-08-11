@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { News } from "@/types/microcms";
 import { formatDate } from "@/lib/format";
 
@@ -83,7 +84,14 @@ export default function NewsAccordion({ items }: { items: News[] }) {
             {isOpen && (
               <div className="news-accordion__body">
                 {news.eyecatch && (
-                  <img src={news.eyecatch.url} alt="" className="news-accordion__image" />
+                  <Image
+                    src={news.eyecatch.url}
+                    alt=""
+                    width={news.eyecatch.width}
+                    height={news.eyecatch.height}
+                    sizes="(min-width: 480px) 480px, 100vw"
+                    className="news-accordion__image"
+                  />
                 )}
                 {news.content && (
                   <div dangerouslySetInnerHTML={{ __html: news.content }} />

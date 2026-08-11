@@ -120,7 +120,7 @@ export default async function HomePage() {
       <section className="section" id="menu">
         <div className="section__heading" style={{ display: "block" }}>
           <span className="section__eyebrow">Menu</span>
-          <h2 className="section__title">鑑定メニュー・料金</h2>
+          <h2 className="section__title">鑑定料金</h2>
         </div>
         {menuRes.contents.length > 0 ? (
           <div>

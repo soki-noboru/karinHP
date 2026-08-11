@@ -71,7 +71,7 @@ export default function ContactForm() {
 
       <div className="form__field">
         <label htmlFor="menu">ご希望のメニュー（任意）</label>
-        <input id="menu" name="ご希望のメニュー" type="text" placeholder="例: 四柱推命鑑定（対面）" />
+        <input id="menu" name="ご希望のメニュー" type="text" placeholder="例: 60分コース" />
       </div>
 
       <div className="form__field">

@@ -10,6 +10,7 @@ import GalleryGrid from "@/components/GalleryGrid";
 import NewsAccordion from "@/components/NewsAccordion";
 import ContactForm from "@/components/ContactForm";
 import ScheduleCalendar from "@/components/ScheduleCalendar";
+import { parsePriceForSort } from "@/lib/format";
 
 // ビルド時にmicroCMSへ接続できない状態でもデプロイが失敗しないよう、
 // このページはリクエスト時にレンダリングします（データ自体はfetchのrevalidate設定でキャッシュされます）。
@@ -50,6 +51,11 @@ export default async function HomePage() {
     fetchListSafe("鑑定メニュー", () => getMenuList()),
     fetchListSafe("スケジュール", () => getScheduleList()),
   ]);
+
+  // 料金の安い順に並べ替えます（料金は自由記述のテキストのため、数字部分だけを取り出して比較します）
+  const sortedMenu = [...menuRes.contents].sort(
+    (a, b) => parsePriceForSort(a.price) - parsePriceForSort(b.price)
+  );
 
   return (
     <>
@@ -120,16 +126,17 @@ export default async function HomePage() {
       <section className="section" id="menu">
         <div className="section__heading" style={{ display: "block" }}>
           <span className="section__eyebrow">Menu</span>
-          <h2 className="section__title">鑑定料金</h2>
+          <h2 className="section__title">鑑定メニュー・料金</h2>
         </div>
-        {menuRes.contents.length > 0 ? (
+        {sortedMenu.length > 0 ? (
           <div>
-            {menuRes.contents.map((item) => (
+            {sortedMenu.map((item) => (
               <div key={item.id} className="menu-card">
                 <div className="menu-card__row">
-                  <span className="menu-card__title">{item.time}</span>
+                  <span className="menu-card__title">{item.title}</span>
                   <span className="menu-card__price">{item.price}</span>
                 </div>
+                {item.time && <p className="menu-card__time">鑑定時間: {item.time}</p>}
               </div>
             ))}
           </div>

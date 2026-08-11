@@ -616,6 +616,12 @@ button {
   white-space: nowrap;
 }
 
+.menu-card__time {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
 /* お問い合わせフォーム */
 .form {
   display: flex;

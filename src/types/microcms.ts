@@ -38,8 +38,9 @@ export type GalleryItem = MicroCMSListContent & {
 
 /** 鑑定メニュー・料金表 (APIエンドポイント: menu) */
 export type MenuItem = MicroCMSListContent & {
-  time: string; // 鑑定時間 例: 30分
-  price: string; // 例: ¥8,000（税込） ※数値ではなく文字列にして自由な表記を許容
+  title: string; // メニュー名 例: 対面鑑定 ※必須
+  price: string; // 例: ¥8,000（税込） ※必須。数値ではなく文字列にして自由な表記を許容
+  time?: string; // 鑑定時間 例: 30分（任意）
 };
 
 /** プロフィール (APIエンドポイント: profile / シングル形式) */

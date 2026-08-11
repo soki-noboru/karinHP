@@ -41,6 +41,7 @@ export type MenuItem = MicroCMSListContent & {
   title: string; // メニュー名 例: 対面鑑定 ※必須
   price: string; // 例: ¥8,000（税込） ※必須。数値ではなく文字列にして自由な表記を許容
   time?: string; // 鑑定時間 例: 30分（任意）
+  description?: string; // 説明（任意）。メニューをクリックした際の詳細モーダルに表示します。
 };
 
 /** プロフィール (APIエンドポイント: profile / シングル形式) */

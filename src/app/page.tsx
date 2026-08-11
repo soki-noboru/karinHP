@@ -7,6 +7,7 @@ import {
   getScheduleList,
 } from "@/lib/microcms";
 import GalleryGrid from "@/components/GalleryGrid";
+import MenuList from "@/components/MenuList";
 import NewsAccordion from "@/components/NewsAccordion";
 import ContactForm from "@/components/ContactForm";
 import ScheduleCalendar from "@/components/ScheduleCalendar";
@@ -129,17 +130,7 @@ export default async function HomePage() {
           <h2 className="section__title">鑑定メニュー・料金</h2>
         </div>
         {sortedMenu.length > 0 ? (
-          <div>
-            {sortedMenu.map((item) => (
-              <div key={item.id} className="menu-card">
-                <div className="menu-card__row">
-                  <span className="menu-card__title">{item.title}</span>
-                  <span className="menu-card__price">{item.price}</span>
-                </div>
-                {item.time && <p className="menu-card__time">鑑定時間: {item.time}</p>}
-              </div>
-            ))}
-          </div>
+          <MenuList items={sortedMenu} />
         ) : (
           <p className="empty-state">現在、鑑定メニューを準備中です。</p>
         )}

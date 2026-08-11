@@ -584,13 +584,19 @@ button {
   cursor: pointer;
 }
 
-/* 鑑定メニュー */
+/* 鑑定メニュー（クリックすると詳細モーダルを開くボタンとして表示） */
 .menu-card {
+  display: block;
+  width: 100%;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 16px;
   box-shadow: var(--shadow-soft);
+  font-family: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .menu-card + .menu-card {
@@ -619,6 +625,44 @@ button {
 .menu-card__time {
   margin: 6px 0 0;
   font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+/* 鑑定メニュー：詳細モーダル（オーバーレイ自体は day-modal-overlay / day-modal を共用） */
+.menu-modal__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-right: 30px;
+}
+
+.menu-modal__title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.menu-modal__price {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-accent-strong);
+  white-space: nowrap;
+}
+
+.menu-modal__time {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.menu-modal__description {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.menu-modal__description--empty {
   color: var(--color-text-muted);
 }
 

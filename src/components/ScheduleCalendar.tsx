@@ -13,6 +13,31 @@ function dateKey(year: number, month: number, day: number) {
   return `${year}-${pad2(month + 1)}-${pad2(day)}`;
 }
 
+// 日本時間(Asia/Tokyo)の日付フォーマッタ。
+// en-CA ロケールは "YYYY-MM-DD" 形式で返ってくるため、そのままキーとして使えます。
+const JST_DATE_FORMATTER = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Tokyo",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+/**
+ * microCMSの日付フィールドは "2026-08-12T15:00:00.000Z" のような
+ * 日付+時刻(UTC)の文字列で返ってくるため、日本時間の "YYYY-MM-DD" に変換します。
+ * すでに "YYYY-MM-DD" 形式（時刻部分なし）の場合はそのまま扱います。
+ */
+function toJstDateKey(rawDate: string) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
+    return rawDate;
+  }
+  const parsed = new Date(rawDate);
+  if (Number.isNaN(parsed.getTime())) {
+    return rawDate;
+  }
+  return JST_DATE_FORMATTER.format(parsed);
+}
+
 function badgeClass(type: ScheduleEntry["type"]) {
   if (type === "鑑定可") return "calendar__badge--ok";
   if (type === "イベント") return "calendar__badge--event";
@@ -46,9 +71,10 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
   const entryMap = useMemo(() => {
     const map = new Map<string, ScheduleEntry[]>();
     for (const entry of entries) {
-      const list = map.get(entry.date) ?? [];
+      const key = toJstDateKey(entry.date);
+      const list = map.get(key) ?? [];
       list.push(entry);
-      map.set(entry.date, list);
+      map.set(key, list);
     }
     return map;
   }, [entries]);

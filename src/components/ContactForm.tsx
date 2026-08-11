@@ -100,7 +100,7 @@ export default function ContactForm() {
 
       <div className="form__field">
         <label htmlFor="time">ご希望時間（任意）</label>
-        <input id="time" name="time" type="text" placeholder="例: 60分" />
+        <input id="time" name="time" type="text" placeholder="例: 50分" />
       </div>
 
       <div className="form__field">

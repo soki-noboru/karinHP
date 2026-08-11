@@ -127,17 +127,9 @@ export default async function HomePage() {
             {menuRes.contents.map((item) => (
               <div key={item.id} className="menu-card">
                 <div className="menu-card__row">
-                  <span className="menu-card__title">{item.title}</span>
+                  <span className="menu-card__title">{item.time}</span>
                   <span className="menu-card__price">{item.price}</span>
                 </div>
-                {item.duration && (
-                  <p className="menu-card__duration">
-                    所要時間目安: {item.duration}
-                  </p>
-                )}
-                {item.description && (
-                  <p className="menu-card__desc">{item.description}</p>
-                )}
               </div>
             ))}
           </div>

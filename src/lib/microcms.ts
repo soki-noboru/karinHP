@@ -74,8 +74,8 @@ export function getGalleryList(queryString = "orders=-publishedAt") {
   });
 }
 
-/** 鑑定メニュー・料金表の一覧を取得します（表示順=orderの昇順） */
-export function getMenuList(queryString = "orders=order&limit=100") {
+/** 鑑定メニュー・料金表の一覧を取得します（作成した順に表示されます） */
+export function getMenuList(queryString = "limit=100") {
   return microcmsFetch<MicroCMSListResponse<MenuItem>>(`/menu?${queryString}`, {
     tags: ["menu"],
   });

@@ -38,11 +38,8 @@ export type GalleryItem = MicroCMSListContent & {
 
 /** 鑑定メニュー・料金表 (APIエンドポイント: menu) */
 export type MenuItem = MicroCMSListContent & {
-  title: string; // 例: 四柱推命鑑定（対面）
+  time: string; // 鑑定時間 例: 30分
   price: string; // 例: ¥8,000（税込） ※数値ではなく文字列にして自由な表記を許容
-  duration?: string; // 例: 約60分
-  description?: string;
-  order?: number; // 表示順（小さい順に表示）
 };
 
 /** プロフィール (APIエンドポイント: profile / シングル形式) */

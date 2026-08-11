@@ -729,7 +729,6 @@ button {
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 8px;
 }
 
 .menu-card__title {
@@ -742,17 +741,6 @@ button {
   font-weight: 800;
   color: var(--color-accent-strong);
   white-space: nowrap;
-}
-
-.menu-card__duration {
-  font-size: 11px;
-  color: var(--color-text-muted);
-  margin-bottom: 8px;
-}
-
-.menu-card__desc {
-  font-size: 13px;
-  color: var(--color-text-muted);
 }
 
 /* お問い合わせフォーム */

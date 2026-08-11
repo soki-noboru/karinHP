@@ -60,7 +60,9 @@ export type ScheduleType = "鑑定可" | "不可" | "イベント";
 
 export type ScheduleEntry = MicroCMSListContent & {
   date: string; // YYYY-MM-DD
-  label: string; // 例: 11時まで／20時以降／マルシェ／講座 など、カレンダーに表示する短い文言
+  startTime?: string; // 開始時刻 例: "13:00"（空欄可）
+  endTime?: string; // 終了時刻 例: "17:00"（空欄可）
+  label?: string; // 例: マルシェ／講座 など、時間以外に添えたい短い文言（任意）
   type: ScheduleType; // 色分け用の区分
   note?: string; // 補足（任意）
 };

@@ -19,6 +19,25 @@ function badgeClass(type: ScheduleEntry["type"]) {
   return "calendar__badge--ng";
 }
 
+/** 開始・終了時刻とラベルから、バッジに表示する文言を組み立てます */
+function badgeText(entry: ScheduleEntry) {
+  let timeRange: string | null = null;
+  if (entry.startTime && entry.endTime) {
+    timeRange = `${entry.startTime}〜${entry.endTime}`;
+  } else if (entry.startTime) {
+    timeRange = `${entry.startTime}〜`;
+  } else if (entry.endTime) {
+    timeRange = `〜${entry.endTime}`;
+  }
+
+  const parts = [timeRange, entry.label].filter(Boolean);
+  if (parts.length > 0) {
+    return parts.join(" ");
+  }
+  // 時刻もラベルも未入力の場合は区分名だけ表示します
+  return entry.type;
+}
+
 export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[] }) {
   const today = useMemo(() => new Date(), []);
   const [year, setYear] = useState(today.getFullYear());
@@ -97,7 +116,7 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
               <span className="calendar__date">{day}</span>
               {dayEntries.map((entry, i) => (
                 <span key={i} className={`calendar__badge ${badgeClass(entry.type)}`}>
-                  {entry.label}
+                  {badgeText(entry)}
                 </span>
               ))}
             </div>

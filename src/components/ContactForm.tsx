@@ -70,8 +70,8 @@ export default function ContactForm() {
       </div>
 
       <div className="form__field">
-        <label htmlFor="menu">ご希望のメニュー（任意）</label>
-        <input id="menu" name="ご希望のメニュー" type="text" placeholder="例: 60分コース" />
+        <label htmlFor="time">ご希望時間（任意）</label>
+        <input id="time" name="ご希望時間" type="text" placeholder="例: 60分" />
       </div>
 
       <div className="form__field">

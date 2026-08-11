@@ -44,6 +44,12 @@ function badgeClass(type: ScheduleEntry["type"]) {
   return "calendar__badge--ng";
 }
 
+function dotClass(type: ScheduleEntry["type"]) {
+  if (type === "鑑定可") return "calendar__dot--ok";
+  if (type === "イベント") return "calendar__dot--event";
+  return "calendar__dot--ng";
+}
+
 /** 開始・終了時刻とラベルから、バッジに表示する文言を組み立てます */
 function badgeText(entry: ScheduleEntry) {
   let timeRange: string | null = null;
@@ -63,10 +69,20 @@ function badgeText(entry: ScheduleEntry) {
   return entry.type;
 }
 
+/** "2026-8-13" のようなキーを "8月13日(木)" のような表示用文字列に変換します */
+function formatDateKeyForModal(key: string) {
+  const [y, m, d] = key.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  const weekday = WEEKDAYS[date.getDay()];
+  return `${m}月${d}日(${weekday})`;
+}
+
 export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[] }) {
   const today = useMemo(() => new Date(), []);
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth()); // 0-11
+  const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
+  const [openEntryId, setOpenEntryId] = useState<string | null>(null);
 
   const entryMap = useMemo(() => {
     const map = new Map<string, ScheduleEntry[]>();
@@ -107,7 +123,20 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
 
   const isCurrentMonth = year === today.getFullYear() && month === today.getMonth();
 
+  function openDay(key: string) {
+    setSelectedDateKey(key);
+    setOpenEntryId(null);
+  }
+
+  function closeModal() {
+    setSelectedDateKey(null);
+    setOpenEntryId(null);
+  }
+
+  const selectedEntries = selectedDateKey ? entryMap.get(selectedDateKey) ?? [] : [];
+
   return (
+    <>
     <div className="calendar">
       <div className="calendar__header">
         <button type="button" onClick={goPrevMonth} aria-label="前の月" className="calendar__nav">
@@ -137,15 +166,25 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
           const key = dateKey(year, month, day);
           const dayEntries = entryMap.get(key) ?? [];
           const isToday = isCurrentMonth && day === today.getDate();
+          const hasEntries = dayEntries.length > 0;
           return (
-            <div key={key} className={`calendar__cell${isToday ? " calendar__cell--today" : ""}`}>
+            <button
+              key={key}
+              type="button"
+              className={`calendar__cell${isToday ? " calendar__cell--today" : ""}${
+                hasEntries ? " calendar__cell--clickable" : ""
+              }`}
+              onClick={() => hasEntries && openDay(key)}
+              disabled={!hasEntries}
+              aria-label={hasEntries ? `${day}日の予定を見る` : undefined}
+            >
               <span className="calendar__date">{day}</span>
               {dayEntries.map((entry, i) => (
                 <span key={i} className={`calendar__badge ${badgeClass(entry.type)}`}>
                   {badgeText(entry)}
                 </span>
               ))}
-            </div>
+            </button>
           );
         })}
       </div>
@@ -165,5 +204,50 @@ export default function ScheduleCalendar({ entries }: { entries: ScheduleEntry[]
         </span>
       </div>
     </div>
+
+    {selectedDateKey && (
+      <div className="day-modal-overlay" role="button" tabIndex={0} onClick={closeModal}>
+        <div
+          className="day-modal"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            className="day-modal__close"
+            onClick={closeModal}
+            aria-label="閉じる"
+          >
+            ✕
+          </button>
+          <p className="day-modal__title">{formatDateKeyForModal(selectedDateKey)}のスケジュール</p>
+          <div className="day-modal__list">
+            {selectedEntries.map((entry) => {
+              const isOpen = openEntryId === entry.id;
+              return (
+                <button
+                  key={entry.id}
+                  type="button"
+                  className="day-modal__entry"
+                  onClick={() => setOpenEntryId(isOpen ? null : entry.id)}
+                >
+                  <span className="day-modal__entry-header">
+                    <i className={`calendar__dot ${dotClass(entry.type)}`} />
+                    <span className="day-modal__entry-text">{badgeText(entry)}</span>
+                  </span>
+                  {isOpen && (
+                    <span className="day-modal__entry-note">
+                      {entry.note ? entry.note : "補足はありません。"}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }

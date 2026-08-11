@@ -45,8 +45,8 @@ async function fetchListSafe<T>(
 export default async function HomePage() {
   const [profile, newsRes, galleryRes, menuRes, scheduleRes] = await Promise.all([
     fetchProfileOrNull(),
-    fetchListSafe("お知らせ", () => getNewsList("limit=20")),
-    fetchListSafe("ギャラリー", () => getGalleryList("limit=100")),
+    fetchListSafe("お知らせ", () => getNewsList("orders=-publishedAt&limit=20")),
+    fetchListSafe("ギャラリー", () => getGalleryList("orders=-publishedAt&limit=100")),
     fetchListSafe("鑑定メニュー", () => getMenuList()),
     fetchListSafe("スケジュール", () => getScheduleList()),
   ]);

@@ -51,8 +51,8 @@ async function microcmsFetch<T>(
   return res.json() as Promise<T>;
 }
 
-/** お知らせ・ブログ記事の一覧を取得します */
-export function getNewsList(queryString = "") {
+/** お知らせ・ブログ記事の一覧を取得します（新しい公開日が先頭に来るように並べます） */
+export function getNewsList(queryString = "orders=-publishedAt") {
   const suffix = queryString ? `?${queryString}` : "";
   return microcmsFetch<MicroCMSListResponse<News>>(`/news${suffix}`, {
     tags: ["news"],
@@ -66,8 +66,8 @@ export function getNewsDetail(id: string) {
   });
 }
 
-/** 写真ギャラリーの一覧を取得します */
-export function getGalleryList(queryString = "") {
+/** 写真ギャラリーの一覧を取得します（新しく公開したものが先頭に来るように並べます） */
+export function getGalleryList(queryString = "orders=-publishedAt") {
   const suffix = queryString ? `?${queryString}` : "";
   return microcmsFetch<MicroCMSListResponse<GalleryItem>>(`/gallery${suffix}`, {
     tags: ["gallery"],

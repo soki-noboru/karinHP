@@ -86,7 +86,7 @@ function formatDateKeyForModal(key: string) {
 }
 
 // 今月から前後何ヶ月まで移動できるようにするか
-const MONTH_RANGE = 3;
+const MONTH_RANGE = 2;
 
 /**
  * 「今日」を日本時間(Asia/Tokyo)基準で取得します。

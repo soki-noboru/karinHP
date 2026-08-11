@@ -256,7 +256,7 @@ button {
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
@@ -274,6 +274,10 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.gallery-grid__more {
+  margin-top: 10px;
 }
 
 .article {
@@ -835,8 +839,19 @@ button {
   left: 16px;
   right: 16px;
   color: #fff;
-  font-size: 13px;
   text-align: center;
+}
+
+.lightbox-overlay__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.lightbox-overlay__description {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .lightbox-overlay__close {

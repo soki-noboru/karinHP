@@ -4,13 +4,20 @@ import { useState } from "react";
 import Image from "next/image";
 import type { GalleryItem } from "@/types/microcms";
 
+// 3列 × 2行 = 6件まで最初に表示します。
+const INITIAL_VISIBLE_COUNT = 6;
+
 export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
   const [selected, setSelected] = useState<GalleryItem | null>(null);
+  const [showAll, setShowAll] = useState(false);
+
+  const visibleItems = showAll ? items : items.slice(0, INITIAL_VISIBLE_COUNT);
+  const hasMore = !showAll && items.length > INITIAL_VISIBLE_COUNT;
 
   return (
     <>
       <div className="gallery-grid">
-        {items.map((item) => (
+        {visibleItems.map((item) => (
           <button
             key={item.id}
             type="button"
@@ -23,11 +30,21 @@ export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
               alt={item.title}
               width={300}
               height={300}
-              sizes="50vw"
+              sizes="33vw"
             />
           </button>
         ))}
       </div>
+
+      {hasMore && (
+        <button
+          type="button"
+          className="news-accordion__more gallery-grid__more"
+          onClick={() => setShowAll(true)}
+        >
+          もっと見る
+        </button>
+      )}
 
       {selected && (
         <div
@@ -53,8 +70,10 @@ export default function GalleryGrid({ items }: { items: GalleryItem[] }) {
             style={{ maxHeight: "80vh", width: "auto", objectFit: "contain" }}
           />
           <div className="lightbox-overlay__caption">
-            {selected.title}
-            {selected.description ? ` — ${selected.description}` : ""}
+            <p className="lightbox-overlay__title">{selected.title}</p>
+            {selected.description && (
+              <p className="lightbox-overlay__description">{selected.description}</p>
+            )}
           </div>
         </div>
       )}

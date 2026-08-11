@@ -34,7 +34,6 @@ export type GalleryItem = MicroCMSListContent & {
   title: string;
   image: MicroCMSImage;
   description?: string;
-  takenAt?: string; // YYYY-MM-DD
 };
 
 /** 鑑定メニュー・料金表 (APIエンドポイント: menu) */

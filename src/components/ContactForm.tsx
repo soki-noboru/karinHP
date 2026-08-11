@@ -19,9 +19,38 @@ export default function ContactForm() {
     }
 
     const form = event.currentTarget;
-    const formData = new FormData(form);
+    const raw = new FormData(form);
+
+    const name = String(raw.get("name") ?? "").trim();
+    const email = String(raw.get("email") ?? "").trim();
+    const time = String(raw.get("time") ?? "").trim();
+    const message = String(raw.get("message") ?? "").trim();
+    const botcheck = raw.get("botcheck");
+
+    // Web3Forms(無料プラン)は通知メール本文のテンプレート自体は変更できないため、
+    // 本文はこちらで組み立てた1つの文章として送信します（項目名の文字化けや
+    // 英語表記のラベルが出ないようにするため）。
+    const composedMessage = [
+      `お名前：${name}`,
+      `メールアドレス：${email}`,
+      `ご希望時間（任意）：${time || "（未入力）"}`,
+      "",
+      "お問い合わせ内容・ご希望日時など：",
+      message,
+    ].join("\n");
+
+    const formData = new FormData();
     formData.append("access_key", accessKey);
-    formData.append("subject", "【ホームページ】お問い合わせ・ご予約");
+    // 件名にお名前を含めることで、メール一覧からすぐに誰からの問い合わせか分かるようにします。
+    formData.append("subject", `【ホームページ】${name}　問い合わせ・鑑定依頼`);
+    // 送信者名を「Notifications」から、問い合わせた方のお名前に変更します。
+    formData.append("from_name", name || "ホームページ");
+    // 返信先（Reply-To）を問い合わせフォームのメールアドレスに設定します。
+    formData.append("replyto", email);
+    formData.append("message", composedMessage);
+    if (botcheck !== null) {
+      formData.append("botcheck", botcheck);
+    }
 
     setStatus("sending");
 
@@ -71,7 +100,7 @@ export default function ContactForm() {
 
       <div className="form__field">
         <label htmlFor="time">ご希望時間（任意）</label>
-        <input id="time" name="ご希望時間" type="text" placeholder="例: 60分" />
+        <input id="time" name="time" type="text" placeholder="例: 60分" />
       </div>
 
       <div className="form__field">

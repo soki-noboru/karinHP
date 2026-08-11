@@ -4,6 +4,7 @@ import type {
   MicroCMSListResponse,
   News,
   Profile,
+  ScheduleEntry,
 } from "@/types/microcms";
 
 const SERVICE_DOMAIN = process.env.MICROCMS_SERVICE_DOMAIN;
@@ -84,5 +85,12 @@ export function getMenuList(queryString = "orders=order&limit=100") {
 export function getProfile() {
   return microcmsFetch<Profile>("/profile", {
     tags: ["profile"],
+  });
+}
+
+/** スケジュール（カレンダー表示用）の一覧を取得します */
+export function getScheduleList(queryString = "orders=date&limit=200") {
+  return microcmsFetch<MicroCMSListResponse<ScheduleEntry>>(`/schedule?${queryString}`, {
+    tags: ["schedule"],
   });
 }

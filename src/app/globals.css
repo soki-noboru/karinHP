@@ -383,6 +383,142 @@ button {
   box-shadow: var(--shadow-soft);
 }
 
+/* カレンダー */
+.calendar {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+.calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 12px;
+}
+
+.calendar__title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.calendar__nav {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  color: var(--color-accent-strong);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.calendar__weekday {
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--color-text-muted);
+  padding-bottom: 4px;
+}
+
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.calendar__cell {
+  min-height: 56px;
+  border-radius: 8px;
+  padding: 4px 3px;
+  background: var(--color-bg-elevated);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.calendar__cell--empty {
+  background: transparent;
+}
+
+.calendar__cell--today {
+  outline: 1.5px solid var(--color-accent);
+}
+
+.calendar__date {
+  font-size: 10.5px;
+  color: var(--color-text-muted);
+}
+
+.calendar__badge {
+  font-size: 8.5px;
+  line-height: 1.3;
+  padding: 1px 4px;
+  border-radius: 6px;
+  text-align: center;
+  color: #fff;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar__badge--ok {
+  background: #6bbf8a;
+}
+
+.calendar__badge--ng {
+  background: #c98a8a;
+}
+
+.calendar__badge--event {
+  background: var(--color-gold);
+  color: #4a3339;
+}
+
+.calendar__legend {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 12px;
+  font-size: 10.5px;
+  color: var(--color-text-muted);
+}
+
+.calendar__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.calendar__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.calendar__dot--ok {
+  background: #6bbf8a;
+}
+
+.calendar__dot--ng {
+  background: #c98a8a;
+}
+
+.calendar__dot--event {
+  background: var(--color-gold);
+}
+
 /* お知らせ（アコーディオン） */
 .news-accordion {
   display: flex;

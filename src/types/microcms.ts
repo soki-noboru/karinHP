@@ -55,6 +55,16 @@ export type Profile = {
   updatedAt: string;
 };
 
+/** スケジュール・カレンダー (APIエンドポイント: schedule) */
+export type ScheduleType = "鑑定可" | "不可" | "イベント";
+
+export type ScheduleEntry = MicroCMSListContent & {
+  date: string; // YYYY-MM-DD
+  label: string; // 例: 11時まで／20時以降／マルシェ／講座 など、カレンダーに表示する短い文言
+  type: ScheduleType; // 色分け用の区分
+  note?: string; // 補足（任意）
+};
+
 /** microCMSのリストAPIのレスポンス形式 */
 export type MicroCMSListResponse<T> = {
   contents: T[];

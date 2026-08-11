@@ -4,10 +4,12 @@ import {
   getMenuList,
   getNewsList,
   getProfile,
+  getScheduleList,
 } from "@/lib/microcms";
 import GalleryGrid from "@/components/GalleryGrid";
 import NewsAccordion from "@/components/NewsAccordion";
 import ContactForm from "@/components/ContactForm";
+import ScheduleCalendar from "@/components/ScheduleCalendar";
 
 // ビルド時にmicroCMSへ接続できない状態でもデプロイが失敗しないよう、
 // このページはリクエスト時にレンダリングします（データ自体はfetchのrevalidate設定でキャッシュされます）。
@@ -21,12 +23,22 @@ async function fetchProfileOrNull() {
   }
 }
 
+// 「スケジュール」APIをまだ作成していない場合でもページ全体が落ちないようにします。
+async function fetchScheduleListSafe() {
+  try {
+    return await getScheduleList();
+  } catch {
+    return { contents: [], totalCount: 0, offset: 0, limit: 0 };
+  }
+}
+
 export default async function HomePage() {
-  const [profile, newsRes, galleryRes, menuRes] = await Promise.all([
+  const [profile, newsRes, galleryRes, menuRes, scheduleRes] = await Promise.all([
     fetchProfileOrNull(),
     getNewsList("limit=20"),
     getGalleryList("limit=100"),
     getMenuList(),
+    fetchScheduleListSafe(),
   ]);
 
   return (
@@ -121,6 +133,19 @@ export default async function HomePage() {
           </div>
         ) : (
           <p className="empty-state">現在、鑑定メニューを準備中です。</p>
+        )}
+      </section>
+
+      {/* スケジュール・カレンダー */}
+      <section className="section" id="schedule">
+        <div className="section__heading" style={{ display: "block" }}>
+          <span className="section__eyebrow">Schedule</span>
+          <h2 className="section__title">スケジュール</h2>
+        </div>
+        {scheduleRes.contents.length > 0 ? (
+          <ScheduleCalendar entries={scheduleRes.contents} />
+        ) : (
+          <p className="empty-state">現在、スケジュールを準備中です。</p>
         )}
       </section>
 

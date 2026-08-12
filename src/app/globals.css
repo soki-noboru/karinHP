@@ -299,6 +299,13 @@ button {
   }
 }
 
+/* 「視差効果を減らす」設定をしている人には、点滅アニメーションを止めます */
+@media (prefers-reduced-motion: reduce) {
+  .onair-badge__dot {
+    animation: none;
+  }
+}
+
 /* 放送中でないときに、次回の放送日時を案内するピル（ブランドカラーで落ち着いた見た目） */
 .next-broadcast {
   display: inline-flex;
@@ -369,6 +376,11 @@ button {
   font-size: 12px;
   color: var(--color-text-muted);
   margin-bottom: 4px;
+}
+
+.radio-archive__new-badge {
+  margin-left: 6px;
+  vertical-align: 1px;
 }
 
 .radio-archive__item audio {

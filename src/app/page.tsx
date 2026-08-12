@@ -11,6 +11,7 @@ import MenuList from "@/components/MenuList";
 import NewsAccordion from "@/components/NewsAccordion";
 import ContactForm from "@/components/ContactForm";
 import ScheduleCalendar from "@/components/ScheduleCalendar";
+import ShareButton from "@/components/ShareButton";
 import {
   getNextRadioBroadcastLabel,
   isRadioOnAirNow,
@@ -123,6 +124,29 @@ function WaveformIcon() {
       <line x1="12" y1="3" x2="12" y2="21" />
       <line x1="16" y1="6" x2="16" y2="18" />
       <line x1="20" y1="9" x2="20" y2="15" />
+    </svg>
+  );
+}
+
+// 「この番組をシェア」ボタン用のアイコン
+function ShareIcon() {
+  return (
+    <svg
+      className="sns-links__icon"
+      viewBox="0 0 24 24"
+      width="14"
+      height="14"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="6" cy="12" r="2.6" />
+      <circle cx="18" cy="6" r="2.6" />
+      <circle cx="18" cy="18" r="2.6" />
+      <line x1="8.2" y1="10.8" x2="15.8" y2="7.2" />
+      <line x1="8.2" y1="13.2" x2="15.8" y2="16.8" />
     </svg>
   );
 }
@@ -295,9 +319,15 @@ export default async function HomePage() {
                 <WaveformIcon />
                 過去の放送を聴く
               </p>
-              {RADIO_ARCHIVE.map((item) => (
+              {RADIO_ARCHIVE.map((item, index) => (
                 <div className="radio-archive__item" key={item.url}>
-                  <span className="radio-archive__label">{item.label}</span>
+                  <span className="radio-archive__label">
+                    {item.label}
+                    {/* 一番新しい回（先頭）だけ「NEW」を付けます */}
+                    {index === 0 && (
+                      <span className="badge radio-archive__new-badge">NEW</span>
+                    )}
+                  </span>
                   {/* eslint-disable-next-line jsx-a11y/media-has-caption -- 音声のみのラジオ放送のため字幕は用意していません */}
                   <audio
                     controls
@@ -345,6 +375,15 @@ export default async function HomePage() {
                   ラジオ
                 </a>
               )}
+              <ShareButton
+                className="sns-links__item"
+                title={`${profile?.name ?? "四柱推命鑑定"}のラジオ出演情報`}
+                text={`${profile?.radioProgramName ?? "ラジオ番組"}をチェック！`}
+                anchor="radio"
+              >
+                <ShareIcon />
+                シェア
+              </ShareButton>
             </div>
           )}
         </section>

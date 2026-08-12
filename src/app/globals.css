@@ -553,6 +553,10 @@ button {
   accent-color: var(--color-accent-strong);
 }
 
+.radio-archive__more {
+  margin-top: 2px;
+}
+
 /* カレンダー */
 .calendar {
   background: var(--color-surface);

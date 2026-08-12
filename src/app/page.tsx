@@ -257,6 +257,13 @@ export default async function HomePage() {
             </div>
           )}
 
+          {profile?.bio && (
+            <div
+              className="profile-body"
+              dangerouslySetInnerHTML={{ __html: profile.bio }}
+            />
+          )}
+
           {RADIO_ARCHIVE.length > 0 && (
             <div className="radio-archive">
               <p className="radio-archive__heading">
@@ -273,13 +280,6 @@ export default async function HomePage() {
                 </div>
               ))}
             </div>
-          )}
-
-          {profile?.bio && (
-            <div
-              className="profile-body"
-              dangerouslySetInnerHTML={{ __html: profile.bio }}
-            />
           )}
 
           {(profile?.instagramUrl || profile?.lineUrl || profile?.radioUrl) && (

@@ -210,27 +210,33 @@ export default async function HomePage() {
     <>
       {/* ヒーロー（プロフィール写真・キャッチコピー） */}
       <div className="hero">
-        {profile?.photo && (
-          <div className="hero__photo">
-            <Image
-              src={profile.photo.url}
-              alt={profile.name}
-              width={540}
-              height={540}
-              sizes="270px"
-              priority
-            />
-          </div>
-        )}
-        <span className="hero__eyebrow">Fortune Telling</span>
-        <p className="hero__title">{profile?.name ?? "四柱推命鑑定"}</p>
-        <p className="hero__lead">
-          {profile?.catchCopy ??
-            "生まれ持った運命の流れを読み解き、これからの一歩を照らします。"}
-        </p>
-        <a href="#contact" className="hero__cta">
-          ご相談・ご予約はこちら
-        </a>
+        {/* 背景を彩る、ぼかしたグラデーションの光（装飾のみ。スクリーンリーダーには不要） */}
+        <div className="hero__orb hero__orb--1" aria-hidden="true" />
+        <div className="hero__orb hero__orb--2" aria-hidden="true" />
+        <div className="hero__orb hero__orb--3" aria-hidden="true" />
+        <div className="hero__content">
+          {profile?.photo && (
+            <div className="hero__photo">
+              <Image
+                src={profile.photo.url}
+                alt={profile.name}
+                width={540}
+                height={540}
+                sizes="270px"
+                priority
+              />
+            </div>
+          )}
+          <span className="hero__eyebrow">Fortune Telling</span>
+          <p className="hero__title">{profile?.name ?? "四柱推命鑑定"}</p>
+          <p className="hero__lead">
+            {profile?.catchCopy ??
+              "生まれ持った運命の流れを読み解き、これからの一歩を照らします。"}
+          </p>
+          <a href="#contact" className="hero__cta">
+            ご相談・ご予約はこちら
+          </a>
+        </div>
       </div>
 
       {/* ラジオ出演情報 */}

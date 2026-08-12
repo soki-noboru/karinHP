@@ -28,6 +28,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
+      <head>
+        {/* 見出し用の明朝体フォント（Shippori Mincho）。next/font/googleは日本語フォントの
+            サブセット指定でビルドエラーになりやすいため、通常のGoogle Fontsの読み込み方式にしています。 */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body>
         <div className="page-shell">
           <Header />

@@ -8,14 +8,18 @@
   --color-accent: #e2839e;
   --color-accent-strong: #c85f7f;
   --color-accent-soft: #ffe1e8;
+  --color-lavender: #d9c7f0;
   --color-gold: #e8b981;
   --color-border: #f5dde3;
   --max-width: 480px;
   --header-height: 56px;
   --bottom-nav-height: 68px;
-  --radius-lg: 20px;
-  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
   --shadow-soft: 0 8px 24px rgba(200, 95, 127, 0.08);
+  --shadow-lift: 0 16px 34px rgba(200, 95, 127, 0.2);
+  /* 見出し用の明朝体（layout.tsxでGoogle Fontsから読み込んでいます） */
+  --font-display: "Shippori Mincho", "Hiragino Mincho ProN", serif;
 }
 
 * {
@@ -95,6 +99,12 @@ button {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   padding: 7px 14px;
   border-radius: 999px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.site-header__cta:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
 }
 
 .section {
@@ -105,7 +115,7 @@ button {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .section__eyebrow {
@@ -118,18 +128,88 @@ button {
 }
 
 .section__title {
-  font-size: 16px;
+  font-family: var(--font-display);
+  font-size: 18px;
   font-weight: 700;
+  position: relative;
+  display: inline-block;
+}
+
+.section__title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 30px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-gold));
 }
 
 .hero {
   position: relative;
-  padding: 40px 20px 32px;
-  background:
-    radial-gradient(circle at 15% -10%, rgba(226, 131, 158, 0.22), transparent 55%),
-    radial-gradient(circle at 90% 10%, rgba(232, 185, 129, 0.18), transparent 50%);
+  padding: 44px 20px 36px;
   overflow: hidden;
   text-align: center;
+}
+
+/* 背景を彩る、ぼかしたグラデーションの光（装飾） */
+.hero__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(36px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero__orb--1 {
+  width: 220px;
+  height: 220px;
+  top: -60px;
+  left: -50px;
+  background: radial-gradient(circle, var(--color-accent-soft), transparent 70%);
+  opacity: 0.55;
+}
+
+.hero__orb--2 {
+  width: 200px;
+  height: 200px;
+  top: 10px;
+  right: -60px;
+  background: radial-gradient(circle, var(--color-lavender), transparent 70%);
+  opacity: 0.4;
+}
+
+.hero__orb--3 {
+  width: 160px;
+  height: 160px;
+  bottom: -70px;
+  left: 40%;
+  background: radial-gradient(circle, var(--color-gold), transparent 70%);
+  opacity: 0.3;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  animation: hero-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__content {
+    animation: none;
+  }
 }
 
 .hero__photo {
@@ -139,7 +219,7 @@ button {
   overflow: hidden;
   margin: 0 auto 16px;
   border: 3px solid #fff;
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-lift);
 }
 
 .hero__photo img {
@@ -149,19 +229,27 @@ button {
 }
 
 .hero__eyebrow {
-  display: block;
+  display: inline-block;
   font-size: 11px;
   letter-spacing: 0.3em;
   color: var(--color-accent-strong);
   text-transform: uppercase;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
 }
 
 .hero__title {
-  font-size: 22px;
+  font-family: var(--font-display);
+  font-size: 26px;
   font-weight: 800;
   margin: 0 0 10px;
   letter-spacing: 0.03em;
+  background: linear-gradient(135deg, var(--color-accent-strong), #a45a86 60%, var(--color-gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .hero__lead {
@@ -174,22 +262,32 @@ button {
 .hero__cta {
   display: inline-block;
   margin-top: 20px;
-  padding: 13px 30px;
+  padding: 14px 32px;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-lift);
   color: #fff;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.05em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(200, 95, 127, 0.28);
+}
+
+.hero__cta:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .badge {
   display: inline-block;
-  padding: 2px 9px;
+  padding: 2px 10px;
   border-radius: 999px;
-  background: var(--color-accent-soft);
-  color: var(--color-accent-strong);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-gold));
+  color: #fff;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -209,6 +307,12 @@ button {
   border: 1px solid var(--color-border);
   padding: 0;
   cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gallery-grid__item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
 }
 
 .gallery-grid__item img {
@@ -251,6 +355,7 @@ button {
   display: flex;
   gap: 10px;
   justify-content: center;
+  flex-wrap: wrap;
   margin-top: 0;
 }
 
@@ -265,6 +370,13 @@ button {
   color: var(--color-accent-strong);
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.sns-links__item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+  background: linear-gradient(135deg, #fff, var(--color-accent-soft));
 }
 
 .sns-links__icon {
@@ -275,15 +387,22 @@ button {
 .onair-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin: 2px 0 14px;
-  padding: 5px 12px;
+  gap: 7px;
+  margin: 2px 0 16px;
+  padding: 7px 16px;
   border-radius: 999px;
-  background: #fdeaea;
-  color: #d63b3b;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, #fdeaea, var(--color-accent-soft));
+  color: #c23a55;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 6px 16px rgba(226, 58, 90, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.onair-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(226, 58, 90, 0.24);
 }
 
 .onair-badge__dot {
@@ -328,26 +447,53 @@ button {
 
 /* ラジオ出演情報のカード（番組名・放送日・放送局） */
 .radio-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  margin: 4px 0 14px;
+  gap: 13px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), var(--color-bg-elevated));
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-lg);
+  padding: 18px 18px;
+  margin: 6px 0 16px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+/* 角にさりげなく添えた、ぼかした金色の光（装飾） */
+.radio-card::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-gold), transparent 70%);
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 .radio-card__row {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 13.5px;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .radio-card__icon {
   flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 9px;
+  box-sizing: border-box;
+  display: block;
   color: var(--color-accent-strong);
+  background: var(--color-surface);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(200, 95, 127, 0.15);
 }
 
 /* 過去のラジオ放送の音声アーカイブ */
@@ -358,11 +504,11 @@ button {
 .radio-archive__heading {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 700;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 800;
   color: var(--color-text);
-  margin: 0 0 10px;
+  margin: 0 0 12px;
 }
 
 .radio-archive__icon {
@@ -371,7 +517,18 @@ button {
 }
 
 .radio-archive__item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
   margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(200, 95, 127, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.radio-archive__item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
 }
 
 .radio-archive__item:last-child {
@@ -380,9 +537,10 @@ button {
 
 .radio-archive__label {
   display: block;
-  font-size: 12px;
+  font-size: 12.5px;
+  font-weight: 600;
   color: var(--color-text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .radio-archive__new-badge {
@@ -481,10 +639,17 @@ button {
 
 .calendar__cell--clickable {
   cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.calendar__cell--clickable:hover {
+  transform: translateY(-1px);
+  background: var(--color-accent-soft);
 }
 
 .calendar__cell--clickable:active {
   background: var(--color-accent-soft);
+  transform: translateY(0);
 }
 
 .calendar__date {
@@ -615,6 +780,12 @@ button {
   gap: 8px;
   font-family: inherit;
   color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.day-modal__entry:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
 }
 
 .day-modal__entry-header {
@@ -649,6 +820,12 @@ button {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.news-accordion__item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
 }
 
 .news-accordion__header {
@@ -719,6 +896,12 @@ button {
   font-weight: 700;
   box-shadow: var(--shadow-soft);
   cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.news-accordion__more:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
 }
 
 /* 鑑定メニュー（クリックすると詳細モーダルを開くボタンとして表示） */
@@ -734,6 +917,12 @@ button {
   color: inherit;
   text-align: left;
   cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
 }
 
 .menu-card + .menu-card {
@@ -847,6 +1036,12 @@ button {
   font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.03em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form__submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
 }
 
 .form__submit:disabled {

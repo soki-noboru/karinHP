@@ -60,7 +60,7 @@ Webhookが届かなくても、60秒ごとに自動でmicroCMSの最新データ
 
 ## 1. まず microCMS 側を準備する
 
-### 1-1. サービスを作成（作成済み）
+### 1-1. サービスを作成
 
 1. https://microcms.io/ で無料アカウントを作成
 2. 「サービスを作成」→ サービスID（例: `karin`）を決める
@@ -285,7 +285,6 @@ src/
     NewsAccordion.tsx        お知らせの開閉式一覧
     ContactForm.tsx          お問い合わせ・ご予約フォーム（Web3Forms送信）
     ScheduleCalendar.tsx     スケジュールカレンダー（月送り・色分け表示）
-    ShareButton.tsx          ラジオ出演セクションのシェアボタン（Web Share API、未対応時はURLコピー）
   lib/microcms.ts           microCMSからデータ取得する処理
   lib/format.ts             日付表示・料金の並び替え・ラジオの放送中判定／次回放送日計算のフォーマット処理
   types/microcms.ts          microCMSのデータ構造に対応する型定義

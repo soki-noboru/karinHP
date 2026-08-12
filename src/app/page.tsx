@@ -13,6 +13,7 @@ import ContactForm from "@/components/ContactForm";
 import ScheduleCalendar from "@/components/ScheduleCalendar";
 import ShareButton from "@/components/ShareButton";
 import {
+  formatDate,
   getNextRadioBroadcastLabel,
   isRadioOnAirNow,
   parsePriceForSort,
@@ -151,24 +152,6 @@ function ShareIcon() {
   );
 }
 
-// 過去のラジオ放送の音声アーカイブ。現時点では固定の3件のみで、
-// 今後増減しても頻繁には変わらない想定のため、CMS化せずコードに直接持たせています。
-// 放送日が新しい順に並べています。
-const RADIO_ARCHIVE = [
-  {
-    url: "https://files.yumenotane.jp/podcast/7-1-2_karinnomiraiyosouzu_20260611.mp3",
-    label: "2026年6月11日放送分",
-  },
-  {
-    url: "https://files.yumenotane.jp/podcast/12-3-4_miraiyosouzu_20251022.mp3",
-    label: "2025年10月22日放送分",
-  },
-  {
-    url: "https://files.yumenotane.jp/podcast/9-1-2_mirai-yosouzu_20250716.mp3",
-    label: "2025年7月16日放送分",
-  },
-];
-
 // ビルド時にmicroCMSへ接続できない状態でもデプロイが失敗しないよう、
 // このページはリクエスト時にレンダリングします（データ自体はfetchのrevalidate設定でキャッシュされます）。
 // (デプロイ動作確認のための更新)
@@ -218,6 +201,11 @@ export default async function HomePage() {
   const isRadioOnAir = isRadioOnAirNow();
   const nextRadioBroadcastLabel = isRadioOnAir ? null : getNextRadioBroadcastLabel();
 
+  // 過去のラジオ放送一覧（profileの繰り返しフィールド）を、放送日が新しい順に並べ替えます
+  const sortedRadioArchive = [...(profile?.radioArchive ?? [])].sort(
+    (a, b) => new Date(b.broadcastDate).getTime() - new Date(a.broadcastDate).getTime()
+  );
+
   return (
     <>
       {/* ヒーロー（プロフィール写真・キャッチコピー） */}
@@ -249,7 +237,8 @@ export default async function HomePage() {
       {(profile?.bio ||
         profile?.radioProgramName ||
         profile?.radioStation ||
-        profile?.radioScheduleText) && (
+        profile?.radioScheduleText ||
+        sortedRadioArchive.length > 0) && (
         <section className="section" id="radio">
           <div className="section__heading" style={{ display: "block" }}>
             <span className="section__eyebrow">On Air</span>
@@ -313,32 +302,37 @@ export default async function HomePage() {
             />
           )}
 
-          {RADIO_ARCHIVE.length > 0 && (
+          {sortedRadioArchive.length > 0 && (
             <div className="radio-archive">
               <p className="radio-archive__heading">
                 <WaveformIcon />
                 過去の放送を聴く
               </p>
-              {RADIO_ARCHIVE.map((item, index) => (
-                <div className="radio-archive__item" key={item.url}>
-                  <span className="radio-archive__label">
-                    {item.label}
-                    {/* 一番新しい回（先頭）だけ「NEW」を付けます */}
-                    {index === 0 && (
-                      <span className="badge radio-archive__new-badge">NEW</span>
-                    )}
-                  </span>
-                  {/* eslint-disable-next-line jsx-a11y/media-has-caption -- 音声のみのラジオ放送のため字幕は用意していません */}
-                  <audio
-                    controls
-                    preload="none"
-                    src={item.url}
-                    aria-label={`${item.label}の放送音声`}
-                  >
-                    お使いのブラウザは音声再生に対応していません。
-                  </audio>
-                </div>
-              ))}
+              {sortedRadioArchive.map((item, index) => {
+                const label = `${formatDate(item.broadcastDate)}放送分${
+                  item.title ? `・${item.title}` : ""
+                }`;
+                return (
+                  <div className="radio-archive__item" key={`${item.audioUrl}-${index}`}>
+                    <span className="radio-archive__label">
+                      {label}
+                      {/* 一番新しい回（先頭）だけ「NEW」を付けます */}
+                      {index === 0 && (
+                        <span className="badge radio-archive__new-badge">NEW</span>
+                      )}
+                    </span>
+                    {/* eslint-disable-next-line jsx-a11y/media-has-caption -- 音声のみのラジオ放送のため字幕は用意していません */}
+                    <audio
+                      controls
+                      preload="none"
+                      src={item.audioUrl}
+                      aria-label={`${label}の放送音声`}
+                    >
+                      お使いのブラウザは音声再生に対応していません。
+                    </audio>
+                  </div>
+                );
+              })}
             </div>
           )}
 

@@ -44,6 +44,18 @@ export type MenuItem = MicroCMSListContent & {
   description?: string; // 説明（任意）。メニューをクリックした際の詳細モーダルに表示します。
 };
 
+/**
+ * ラジオの過去放送1回分（profileの「radioArchive」繰り返しフィールドの中身）。
+ * microCMSの繰り返しフィールドは、各要素にfieldId（どのカスタムフィールドから
+ * 作られた項目かの識別子）が自動で付きますが、ここでは使わないので任意にしています。
+ */
+export type RadioArchiveEntry = {
+  fieldId?: string;
+  broadcastDate: string; // 放送日（例: "2026-06-11"）
+  audioUrl: string; // 放送音声のURL
+  title?: string; // 補足タイトル（任意。例: ゲスト回 など）
+};
+
 /** プロフィール (APIエンドポイント: profile / シングル形式) */
 export type Profile = {
   name: string; // 例: 華鈴
@@ -56,6 +68,7 @@ export type Profile = {
   radioProgramName?: string; // ラジオの番組名 例: 華鈴の未来予想図
   radioStation?: string; // 放送局 例: ゆめのたね放送局（グリーンチャンネル）
   radioScheduleText?: string; // 放送日時の表示用テキスト 例: 毎週木曜日 21:30〜22:00
+  radioArchive?: RadioArchiveEntry[]; // 過去の放送一覧（繰り返しフィールド）。かりんさんがmicroCMS側で追加・削除できます
   updatedAt: string;
 };
 

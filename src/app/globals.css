@@ -299,6 +299,19 @@ button {
   }
 }
 
+/* 放送中でないときに、次回の放送日時を案内するピル（ブランドカラーで落ち着いた見た目） */
+.next-broadcast {
+  display: inline-flex;
+  align-items: center;
+  margin: 2px 0 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 /* ラジオ出演情報のカード（番組名・放送日・放送局） */
 .radio-card {
   display: flex;

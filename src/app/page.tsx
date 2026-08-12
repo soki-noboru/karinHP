@@ -11,7 +11,11 @@ import MenuList from "@/components/MenuList";
 import NewsAccordion from "@/components/NewsAccordion";
 import ContactForm from "@/components/ContactForm";
 import ScheduleCalendar from "@/components/ScheduleCalendar";
-import { isRadioOnAirNow, parsePriceForSort } from "@/lib/format";
+import {
+  getNextRadioBroadcastLabel,
+  isRadioOnAirNow,
+  parsePriceForSort,
+} from "@/lib/format";
 
 // ラジオ出演セクション用の小さなアイコン（外部ライブラリを増やさず、インラインSVGで用意）
 // 番組名の行のアイコン。マイクよりも「ラジオ番組」感が出るよう、
@@ -186,6 +190,10 @@ export default async function HomePage() {
     (a, b) => parsePriceForSort(a.price) - parsePriceForSort(b.price)
   );
 
+  // ラジオが今まさに放送中かどうか、そうでなければ次回の放送日時を求めます
+  const isRadioOnAir = isRadioOnAirNow();
+  const nextRadioBroadcastLabel = isRadioOnAir ? null : getNextRadioBroadcastLabel();
+
   return (
     <>
       {/* ヒーロー（プロフィール写真・キャッチコピー） */}
@@ -224,12 +232,29 @@ export default async function HomePage() {
             <h2 className="section__title">ラジオ出演</h2>
           </div>
 
-          {/* 放送時間帯（毎週木曜21:30〜22:00、日本時間）だけ表示される「放送中」バッジ */}
-          {isRadioOnAirNow() && (
-            <p className="onair-badge">
-              <span className="onair-badge__dot" />
-              放送中
-            </p>
+          {/* 放送時間帯（毎週木曜21:30〜22:00、日本時間）だけ表示される「放送中」バッジ。
+              radioUrlが設定されていれば、タップしてそのまま聴きに行けるリンクにします。 */}
+          {isRadioOnAir &&
+            (profile?.radioUrl ? (
+              <a
+                className="onair-badge"
+                href={profile.radioUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="onair-badge__dot" />
+                放送中・今すぐ聴く
+              </a>
+            ) : (
+              <p className="onair-badge">
+                <span className="onair-badge__dot" />
+                放送中
+              </p>
+            ))}
+
+          {/* 放送中でない場合は、次回の放送日時を案内します */}
+          {!isRadioOnAir && nextRadioBroadcastLabel && (
+            <p className="next-broadcast">次回放送: {nextRadioBroadcastLabel}</p>
           )}
 
           {(profile?.radioProgramName ||
@@ -274,7 +299,12 @@ export default async function HomePage() {
                 <div className="radio-archive__item" key={item.url}>
                   <span className="radio-archive__label">{item.label}</span>
                   {/* eslint-disable-next-line jsx-a11y/media-has-caption -- 音声のみのラジオ放送のため字幕は用意していません */}
-                  <audio controls preload="none" src={item.url}>
+                  <audio
+                    controls
+                    preload="none"
+                    src={item.url}
+                    aria-label={`${item.label}の放送音声`}
+                  >
                     お使いのブラウザは音声再生に対応していません。
                   </audio>
                 </div>

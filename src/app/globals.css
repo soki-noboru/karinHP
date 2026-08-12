@@ -248,6 +248,8 @@ button {
 }
 
 .sns-links__item {
+  display: inline-flex;
+  align-items: center;
   padding: 9px 20px;
   border-radius: 999px;
   border: 1px solid var(--color-border);
@@ -256,6 +258,69 @@ button {
   color: var(--color-accent-strong);
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
+}
+
+.sns-links__icon {
+  margin-right: 5px;
+}
+
+/* ラジオ「放送中」バッジ（放送時間帯のみ表示） */
+.onair-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #fdeaea;
+  color: #d63b3b;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.onair-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e64545;
+  animation: onair-pulse 1.6s ease-out infinite;
+}
+
+@keyframes onair-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(230, 69, 69, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(230, 69, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(230, 69, 69, 0);
+  }
+}
+
+/* ラジオ出演情報のカード（番組名・放送日・放送局） */
+.radio-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin: 4px 0 14px;
+}
+
+.radio-card__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+}
+
+.radio-card__icon {
+  flex: none;
+  color: var(--color-accent-strong);
 }
 
 /* カレンダー */

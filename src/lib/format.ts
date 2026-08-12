@@ -24,3 +24,38 @@ export function parsePriceForSort(price: string): number {
   if (!digits) return Number.POSITIVE_INFINITY;
   return Number(digits);
 }
+
+// ラジオの放送スケジュール（日本時間）: 毎週木曜日 21:30〜22:00
+// ※放送の曜日・時間が変わった場合は、この3つの定数を更新してください。
+const RADIO_ON_AIR_WEEKDAY = "Thu"; // Intlのweekday: "short"（en-US）表記
+const RADIO_ON_AIR_START_MINUTES = 21 * 60 + 30; // 21:30
+const RADIO_ON_AIR_END_MINUTES = 22 * 60; // 22:00
+
+/**
+ * 現在（日本時間）が、ラジオの放送時間内かどうかを判定します。
+ * サーバー（VercelはUTC）でもブラウザでも同じ結果になるよう、
+ * 常に日本時間(Asia/Tokyo)基準で曜日・時刻を取り出して比較します。
+ */
+export function isRadioOnAirNow(now: Date = new Date()): boolean {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Tokyo",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(now);
+
+  const weekday = parts.find((p) => p.type === "weekday")?.value;
+  const hour = Number(parts.find((p) => p.type === "hour")?.value ?? NaN);
+  const minute = Number(parts.find((p) => p.type === "minute")?.value ?? NaN);
+
+  if (weekday !== RADIO_ON_AIR_WEEKDAY || Number.isNaN(hour) || Number.isNaN(minute)) {
+    return false;
+  }
+
+  const minutesSinceMidnight = hour * 60 + minute;
+  return (
+    minutesSinceMidnight >= RADIO_ON_AIR_START_MINUTES &&
+    minutesSinceMidnight < RADIO_ON_AIR_END_MINUTES
+  );
+}

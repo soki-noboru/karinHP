@@ -11,7 +11,91 @@ import MenuList from "@/components/MenuList";
 import NewsAccordion from "@/components/NewsAccordion";
 import ContactForm from "@/components/ContactForm";
 import ScheduleCalendar from "@/components/ScheduleCalendar";
-import { parsePriceForSort } from "@/lib/format";
+import { isRadioOnAirNow, parsePriceForSort } from "@/lib/format";
+
+// ラジオ出演セクション用の小さなアイコン（外部ライブラリを増やさず、インラインSVGで用意）
+function MicIcon() {
+  return (
+    <svg
+      className="radio-card__icon"
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="9" y="2" width="6" height="12" rx="3" />
+      <path d="M5 11a7 7 0 0 0 14 0" />
+      <line x1="12" y1="18" x2="12" y2="22" />
+      <line x1="8" y1="22" x2="16" y2="22" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg
+      className="radio-card__icon"
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3.5 2" />
+    </svg>
+  );
+}
+
+function AntennaIcon() {
+  return (
+    <svg
+      className="radio-card__icon"
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 21v-8" />
+      <path d="M9 13l3-8 3 8" />
+      <path d="M6.5 9.5a7.5 7.5 0 0 1 11 0" />
+      <path d="M4 6.5a11 11 0 0 1 16 0" />
+    </svg>
+  );
+}
+
+function RadioWaveIcon() {
+  return (
+    <svg
+      className="sns-links__icon"
+      viewBox="0 0 24 24"
+      width="14"
+      height="14"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none" />
+      <path d="M8.5 8.5a5 5 0 0 0 0 7" />
+      <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+      <path d="M5.5 5.5a9.5 9.5 0 0 0 0 13" />
+      <path d="M18.5 5.5a9.5 9.5 0 0 1 0 13" />
+    </svg>
+  );
+}
 
 // ビルド時にmicroCMSへ接続できない状態でもデプロイが失敗しないよう、
 // このページはリクエスト時にレンダリングします（データ自体はfetchのrevalidate設定でキャッシュされます）。
@@ -86,17 +170,57 @@ export default async function HomePage() {
       </div>
 
       {/* ラジオ出演情報 */}
-      {profile?.bio && (
+      {(profile?.bio ||
+        profile?.radioProgramName ||
+        profile?.radioStation ||
+        profile?.radioScheduleText) && (
         <section className="section" id="radio">
           <div className="section__heading" style={{ display: "block" }}>
             <span className="section__eyebrow">On Air</span>
             <h2 className="section__title">ラジオ出演</h2>
           </div>
-          <div
-            className="profile-body"
-            dangerouslySetInnerHTML={{ __html: profile.bio }}
-          />
-          {(profile.instagramUrl || profile.lineUrl || profile.radioUrl) && (
+
+          {/* 放送時間帯（毎週木曜21:30〜22:00、日本時間）だけ表示される「放送中」バッジ */}
+          {isRadioOnAirNow() && (
+            <p className="onair-badge">
+              <span className="onair-badge__dot" />
+              放送中
+            </p>
+          )}
+
+          {(profile?.radioProgramName ||
+            profile?.radioStation ||
+            profile?.radioScheduleText) && (
+            <div className="radio-card">
+              {profile.radioProgramName && (
+                <div className="radio-card__row">
+                  <MicIcon />
+                  <span>{profile.radioProgramName}</span>
+                </div>
+              )}
+              {profile.radioScheduleText && (
+                <div className="radio-card__row">
+                  <ClockIcon />
+                  <span>{profile.radioScheduleText}</span>
+                </div>
+              )}
+              {profile.radioStation && (
+                <div className="radio-card__row">
+                  <AntennaIcon />
+                  <span>{profile.radioStation}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {profile?.bio && (
+            <div
+              className="profile-body"
+              dangerouslySetInnerHTML={{ __html: profile.bio }}
+            />
+          )}
+
+          {(profile?.instagramUrl || profile?.lineUrl || profile?.radioUrl) && (
             <div className="sns-links">
               {profile.instagramUrl && (
                 <a
@@ -125,6 +249,7 @@ export default async function HomePage() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
+                  <RadioWaveIcon />
                   ラジオ
                 </a>
               )}

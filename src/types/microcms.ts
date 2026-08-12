@@ -53,6 +53,9 @@ export type Profile = {
   instagramUrl?: string;
   lineUrl?: string;
   radioUrl?: string;
+  radioProgramName?: string; // ラジオの番組名 例: 華鈴の未来予想図
+  radioStation?: string; // 放送局 例: ゆめのたね放送局（グリーンチャンネル）
+  radioScheduleText?: string; // 放送日時の表示用テキスト 例: 毎週木曜日 21:30〜22:00
   updatedAt: string;
 };
 

@@ -52,6 +52,7 @@ export type Profile = {
   bio: string; // リッチエディタのHTML
   instagramUrl?: string;
   lineUrl?: string;
+  radioUrl?: string;
   updatedAt: string;
 };
 

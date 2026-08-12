@@ -85,18 +85,18 @@ export default async function HomePage() {
         </a>
       </div>
 
-      {/* プロフィール・自己紹介 */}
+      {/* ラジオ出演情報 */}
       {profile?.bio && (
-        <section className="section" id="profile">
+        <section className="section" id="radio">
           <div className="section__heading" style={{ display: "block" }}>
-            <span className="section__eyebrow">Profile</span>
-            <h2 className="section__title">プロフィール</h2>
+            <span className="section__eyebrow">On Air</span>
+            <h2 className="section__title">ラジオ出演</h2>
           </div>
           <div
             className="profile-body"
             dangerouslySetInnerHTML={{ __html: profile.bio }}
           />
-          {(profile.instagramUrl || profile.lineUrl) && (
+          {(profile.instagramUrl || profile.lineUrl || profile.radioUrl) && (
             <div className="sns-links">
               {profile.instagramUrl && (
                 <a
@@ -116,6 +116,16 @@ export default async function HomePage() {
                   rel="noopener noreferrer"
                 >
                   公式LINE
+                </a>
+              )}
+              {profile.radioUrl && (
+                <a
+                  className="sns-links__item"
+                  href={profile.radioUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  ラジオ
                 </a>
               )}
             </div>

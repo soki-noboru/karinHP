@@ -14,7 +14,9 @@ import ScheduleCalendar from "@/components/ScheduleCalendar";
 import { isRadioOnAirNow, parsePriceForSort } from "@/lib/format";
 
 // ラジオ出演セクション用の小さなアイコン（外部ライブラリを増やさず、インラインSVGで用意）
-function MicIcon() {
+// 番組名の行のアイコン。マイクよりも「ラジオ番組」感が出るよう、
+// アンテナ付きのラジオ受信機の形にしています。
+function RadioSetIcon() {
   return (
     <svg
       className="radio-card__icon"
@@ -27,10 +29,12 @@ function MicIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <rect x="9" y="2" width="6" height="12" rx="3" />
-      <path d="M5 11a7 7 0 0 0 14 0" />
-      <line x1="12" y1="18" x2="12" y2="22" />
-      <line x1="8" y1="22" x2="16" y2="22" />
+      <path d="M17 8l3-4" />
+      <rect x="3" y="8" width="18" height="10" rx="2" />
+      <circle cx="7.5" cy="13" r="1.4" />
+      <line x1="12.5" y1="11" x2="12.5" y2="15" />
+      <line x1="15.5" y1="11" x2="15.5" y2="15" />
+      <line x1="18.5" y1="11" x2="18.5" y2="15" />
     </svg>
   );
 }
@@ -75,10 +79,10 @@ function AntennaIcon() {
   );
 }
 
-function RadioWaveIcon() {
+function RadioWaveIcon({ className = "sns-links__icon" }: { className?: string }) {
   return (
     <svg
-      className="sns-links__icon"
+      className={className}
       viewBox="0 0 24 24"
       width="14"
       height="14"
@@ -96,6 +100,46 @@ function RadioWaveIcon() {
     </svg>
   );
 }
+
+// 「過去の放送を聴く」の見出しに添える音声の波形アイコン
+function WaveformIcon() {
+  return (
+    <svg
+      className="radio-archive__icon"
+      viewBox="0 0 24 24"
+      width="14"
+      height="14"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    >
+      <line x1="4" y1="9" x2="4" y2="15" />
+      <line x1="8" y1="6" x2="8" y2="18" />
+      <line x1="12" y1="3" x2="12" y2="21" />
+      <line x1="16" y1="6" x2="16" y2="18" />
+      <line x1="20" y1="9" x2="20" y2="15" />
+    </svg>
+  );
+}
+
+// 過去のラジオ放送の音声アーカイブ。現時点では固定の3件のみで、
+// 今後増減しても頻繁には変わらない想定のため、CMS化せずコードに直接持たせています。
+// 放送日が新しい順に並べています。
+const RADIO_ARCHIVE = [
+  {
+    url: "https://files.yumenotane.jp/podcast/7-1-2_karinnomiraiyosouzu_20260611.mp3",
+    label: "2026年6月11日放送分",
+  },
+  {
+    url: "https://files.yumenotane.jp/podcast/12-3-4_miraiyosouzu_20251022.mp3",
+    label: "2025年10月22日放送分",
+  },
+  {
+    url: "https://files.yumenotane.jp/podcast/9-1-2_mirai-yosouzu_20250716.mp3",
+    label: "2025年7月16日放送分",
+  },
+];
 
 // ビルド時にmicroCMSへ接続できない状態でもデプロイが失敗しないよう、
 // このページはリクエスト時にレンダリングします（データ自体はfetchのrevalidate設定でキャッシュされます）。
@@ -194,7 +238,7 @@ export default async function HomePage() {
             <div className="radio-card">
               {profile.radioProgramName && (
                 <div className="radio-card__row">
-                  <MicIcon />
+                  <RadioSetIcon />
                   <span>{profile.radioProgramName}</span>
                 </div>
               )}
@@ -210,6 +254,24 @@ export default async function HomePage() {
                   <span>{profile.radioStation}</span>
                 </div>
               )}
+            </div>
+          )}
+
+          {RADIO_ARCHIVE.length > 0 && (
+            <div className="radio-archive">
+              <p className="radio-archive__heading">
+                <WaveformIcon />
+                過去の放送を聴く
+              </p>
+              {RADIO_ARCHIVE.map((item) => (
+                <div className="radio-archive__item" key={item.url}>
+                  <span className="radio-archive__label">{item.label}</span>
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption -- 音声のみのラジオ放送のため字幕は用意していません */}
+                  <audio controls preload="none" src={item.url}>
+                    お使いのブラウザは音声再生に対応していません。
+                  </audio>
+                </div>
+              ))}
             </div>
           )}
 

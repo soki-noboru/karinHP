@@ -337,48 +337,51 @@ export default async function HomePage() {
           )}
 
           {(profile?.instagramUrl || profile?.lineUrl || profile?.radioUrl) && (
-            <div className="sns-links">
-              {profile.instagramUrl && (
-                <a
+            <>
+              <p className="sns-links__lead">SNS・ラジオはこちらから</p>
+              <div className="sns-links">
+                {profile.instagramUrl && (
+                  <a
+                    className="sns-links__item"
+                    href={profile.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Instagram
+                  </a>
+                )}
+                {profile.lineUrl && (
+                  <a
+                    className="sns-links__item"
+                    href={profile.lineUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    公式LINE
+                  </a>
+                )}
+                {profile.radioUrl && (
+                  <a
+                    className="sns-links__item"
+                    href={profile.radioUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <RadioWaveIcon />
+                    ラジオ
+                  </a>
+                )}
+                <ShareButton
                   className="sns-links__item"
-                  href={profile.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  title={`${profile?.name ?? "四柱推命鑑定"}のラジオ出演情報`}
+                  text={`${profile?.radioProgramName ?? "ラジオ番組"}をチェック！`}
+                  anchor="radio"
                 >
-                  Instagram
-                </a>
-              )}
-              {profile.lineUrl && (
-                <a
-                  className="sns-links__item"
-                  href={profile.lineUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  公式LINE
-                </a>
-              )}
-              {profile.radioUrl && (
-                <a
-                  className="sns-links__item"
-                  href={profile.radioUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <RadioWaveIcon />
-                  ラジオ
-                </a>
-              )}
-              <ShareButton
-                className="sns-links__item"
-                title={`${profile?.name ?? "四柱推命鑑定"}のラジオ出演情報`}
-                text={`${profile?.radioProgramName ?? "ラジオ番組"}をチェック！`}
-                anchor="radio"
-              >
-                <ShareIcon />
-                シェア
-              </ShareButton>
-            </div>
+                  <ShareIcon />
+                  シェア
+                </ShareButton>
+              </div>
+            </>
           )}
         </section>
       )}

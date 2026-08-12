@@ -240,11 +240,18 @@ button {
   padding: 4px 4px 0;
 }
 
+.sns-links__lead {
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin: 18px 0 8px;
+}
+
 .sns-links {
   display: flex;
   gap: 10px;
   justify-content: center;
-  margin-top: 18px;
+  margin-top: 0;
 }
 
 .sns-links__item {

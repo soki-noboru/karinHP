@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Header from "@/components/Header";
 
@@ -32,6 +33,8 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
         </div>
+        {/* Vercelのアクセス解析（Web Analytics）。無料枠は月5万イベントまで、Hobbyプランで課金は発生しません。 */}
+        <Analytics />
       </body>
     </html>
   );
